@@ -1,0 +1,46 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with: { python-version: "3.11" }
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python -
+      - name: Install dependencies
+        run: poetry install
+        working-directory: ./backend
+      - name: Lint
+        run: poetry run ruff .
+        working-directory: ./backend
+      - name: Type check
+        run: poetry run mypy .
+        working-directory: ./backend
+      - name: Tests
+        run: poetry run pytest -q
+        working-directory: ./backend
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install
+        run: npm ci
+        working-directory: ./frontend
+      - name: Lint
+        run: npm run lint
+        working-directory: ./frontend
+      - name: Typecheck
+        run: npm run typecheck
+        working-directory: ./frontend
+      - name: Tests
+        run: npm run test -- --coverage
+        working-directory: ./frontend
