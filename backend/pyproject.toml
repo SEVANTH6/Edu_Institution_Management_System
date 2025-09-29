@@ -5,6 +5,10 @@ description = ""
 authors = ["HarshavardhanaP96 <pkhrao3112.harsha@gmail.com>"]
 readme = "README.md"
 
+packages = [
+    { include = "config" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.12"
 djangorestframework = "3.16.1"
