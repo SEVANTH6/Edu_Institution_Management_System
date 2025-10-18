@@ -34,6 +34,11 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "accounts",
+    "academics",
+    "communications",
+    "records",
+    "rest_framework"
 ]
 
 MIDDLEWARE: list[str] = [
