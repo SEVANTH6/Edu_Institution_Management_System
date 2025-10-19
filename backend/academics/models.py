@@ -3,7 +3,7 @@ from django.db import models
 class Branches(models.Model):
     branch_id = models.AutoField(primary_key=True)
     branch_name = models.TextField()
-    HOD = models.ForeignKey('accounts.Faculties', on_delete=models.SET_NULL, null=True, related_name='hod_of_branches')
+    # HOD = models.ForeignKey('accounts.Faculties', on_delete=models.SET_NULL, null=True, related_name='hod_of_branches')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     modified_by = models.TextField()

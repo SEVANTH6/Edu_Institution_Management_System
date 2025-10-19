@@ -20,9 +20,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
-    path("api/", include("academics.urls")),  # Manages the college's structure (departments, courses, subjects)
-    path("api/", include("accounts.urls")), # User authentication and profiles (Admin, Teachers, Students)
-    path("api/", include("communications.urls")), # Handles Parent Notifications (emails, SMS)
-    path("api/", include("records.urls")), # Manages Student Records (attendance, grades)
+    path("api/", include("config.api_urls")),  # Single line for all API routes
 ]
