@@ -1,0 +1,22 @@
+# ==============================
+# CODEOWNERS for Django + React
+# ==============================
+
+# Frontend React app
+/frontend/ @thinker010 @PuneethKumar01 @SEVANTH6
+
+# Backend Django app
+/backend/ @thinker010 @PuneethKumar01 @SEVANTH6
+
+# CI/CD workflows
+/.github/workflows/ @HarshavardhanaP96
+
+# Configuration and environment files
+/config/ @Roshan-anand @thinker010
+/.env.example @HarshavardhanaP96
+
+# Documentation
+/docs/ @Roshan-anand @thinker010
+
+# Default owners (if no specific match)
+* @HarshavardhanaP96 @Internaladmin23
