@@ -26,7 +26,7 @@ class AttendanceStatus(models.TextChoices):
 
 class Fees(models.Model):
     fee_id = models.AutoField(primary_key=True)
-    student = models.ForeignKey('accounts.Students', on_delete=models.CASCADE, related_name='fees')
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='fees')
     amount_due = models.DecimalField(max_digits=10, decimal_places=2)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     due_date = models.DateField()
@@ -40,7 +40,7 @@ class Fees(models.Model):
 
 class Marks(models.Model):
     mark_id = models.AutoField(primary_key=True)
-    student = models.ForeignKey('accounts.Students', on_delete=models.CASCADE, related_name='marks')
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='marks')
     subject = models.ForeignKey('academics.Subjects', on_delete=models.CASCADE, related_name='marks')
     exam_type = models.CharField(max_length=20, choices=ExamType.choices)
     score = models.IntegerField()
@@ -53,7 +53,7 @@ class Marks(models.Model):
 
 class Backlogs(models.Model):
     backlog_id = models.AutoField(primary_key=True)
-    student = models.ForeignKey('accounts.Students', on_delete=models.CASCADE, related_name='backlogs')
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='backlogs')
     subject = models.ForeignKey('academics.Subjects', on_delete=models.CASCADE, related_name='backlogs')
     exam_type = models.CharField(max_length=20, choices=ExamType.choices)
     status = models.CharField(max_length=10, choices=BacklogStatus.choices)
@@ -66,7 +66,7 @@ class Backlogs(models.Model):
 
 class Attendance(models.Model):
     attendance_id = models.AutoField(primary_key=True)
-    student = models.ForeignKey('accounts.Students', on_delete=models.CASCADE, related_name='attendance_records')
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='attendance_records')
     date = models.DateField()
     status = models.CharField(max_length=10, choices=AttendanceStatus.choices)
     class_sub = models.ForeignKey('academics.Class_sub', on_delete=models.CASCADE, related_name='attendance_records')

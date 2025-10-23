@@ -7,7 +7,7 @@ class AlertStatus(models.TextChoices):
 
 class ParentAlerts(models.Model):
     alert_id = models.AutoField(primary_key=True)
-    student = models.ForeignKey('accounts.Students', on_delete=models.CASCADE, related_name='alerts')
+    student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='alerts')
     message = models.TextField()
     timestamp = models.DateTimeField()
     status = models.CharField(max_length=10, choices=AlertStatus.choices)
