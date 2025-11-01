@@ -1,88 +1,144 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from .models import Mark, Attendance
+from .serializers import MarksSerializer, AttendanceSerializer
+
 
 # Create your views here.
 
-
-# --Fees Record View--
-#for handling all fees record operations
-class AllFeesRecordAPIView(APIView):
-    def get(self, request):
-        return Response({"message": "Fees Record API Endpoint"})
-
-    def post(self, request):
-        return Response({"message": "Fees Record API POST request"})
-    
-#for handling individual fees record operations
-class OneFeesRecordAPIView(APIView):
-    def get(self, request, fee_id):
-        return Response({"message": f"Fees Record API Endpoint for record {fee_id}"})
-
-    def put(self, request, fee_id):
-        return Response({"message": f"Fees Record API PUT request for record {fee_id}"})
-
-    def delete(self, request, fee_id):
-        return Response({"message": f"Fees Record API DELETE request for record {fee_id}"})
-    
-
-# --Marks View--
-#for handling all marks operations
 class AllMarksAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
-        return Response({"message": "Marks API Endpoint"})
-
+        user = request.user
+    
+        if user.user_type == 'admin' or user.is_superuser:
+            marks = Mark.objects.all()
+        
+        elif user.user_type == 'faculty':
+            marks = Mark.objects.all()  
+        
+        elif user.user_type == 'student':
+            try:
+                marks = Mark.objects.filter(student__user=user)
+            except:
+                marks = Mark.objects.none()
+        
+        else:
+            marks = Mark.objects.none()
+        
+        serializer = MarksSerializer(marks, many=True, context={'request': request})
+        return Response(serializer.data)
+    
     def post(self, request):
-        return Response({"message": "Marks API POST request"})
+        serializer = MarksSerializer(data = request.data, context={'request': request})
 
-#for handling individual marks operations
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
 class OneMarksAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self, marks_id):
+        try:
+            return Mark.objects.get(mark_id=marks_id)
+        except Mark.DoesNotExist:
+            return None
+    
     def get(self, request, marks_id):
-        return Response({"message": f"Marks API Endpoint for marks {marks_id}"})
+        mark = self.get_object(marks_id)
+        if mark is None:
+            return Response({'error': 'Mark not found'}, status=404)
+
+        serializer = MarksSerializer(mark, context={'request': request})    
+        return Response(serializer.data)
 
     def put(self, request, marks_id):
-        return Response({"message": f"Marks API PUT request for marks {marks_id}"})
-
+        mark = self.get_object(marks_id)
+        if mark is None:
+            return Response({'error': 'Mark not found'}, status=404)
+        
+        serializer = MarksSerializer(mark, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    
     def delete(self, request, marks_id):
-        return Response({"message": f"Marks API DELETE request for marks {marks_id}"})
-
-
-# --Backlogs View--
-#for handling all backlogs operations
-class AllBacklogsAPIView(APIView):
-    def get(self, request):
-        return Response({"message": "Backlogs API Endpoint"})
-
-    def post(self, request):
-        return Response({"message": "Backlogs API POST request"})
-
-#for handling individual backlogs operations
-class OneBacklogsAPIView(APIView):
-    def get(self, request, backlog_id):
-        return Response({"message": f"Backlogs API Endpoint for backlog {backlog_id}"})
-
-    def put(self, request, backlog_id):
-        return Response({"message": f"Backlogs API PUT request for backlog {backlog_id}"})
-
-    def delete(self, request, backlog_id):
-        return Response({"message": f"Backlogs API DELETE request for backlog {backlog_id}"})
+        mark = self.get_object(marks_id)
+        if mark is None:
+            return Response({'error': 'Mark not found'}, status=404)
+        mark.delete()
+        return Response(status=204)
     
 
-# --Attendance View--
-#for handling all attendance operations
 class AllAttendanceAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
-        return Response({"message": "Attendance API Endpoint"})
-
+        user = request.user
+        
+        if user.user_type == 'admin' or user.is_superuser:
+            attendance_records = Attendance.objects.all()
+        
+        elif user.user_type == 'faculty':
+            attendance_records = Attendance.objects.all()  
+        
+        elif user.user_type == 'student':
+            try:
+                attendance_records = Attendance.objects.filter(student__user=user)
+            except:
+                attendance_records = Attendance.objects.none()
+        
+        else:
+            attendance_records = Attendance.objects.none()
+        
+        serializer = AttendanceSerializer(attendance_records, many=True, context={'request': request})
+        return Response(serializer.data)
+    
     def post(self, request):
-        return Response({"message": "Attendance API POST request"})
+        serializer = AttendanceSerializer(data = request.data, context={'request': request})
 
-#for handling individual attendance operations
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
 class OneAttendanceAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self, attendance_id):
+        try:
+            return Attendance.objects.get(attendance_id=attendance_id)
+        except Attendance.DoesNotExist:
+            return None
+
     def get(self, request, attendance_id):
-        return Response({"message": f"Attendance API Endpoint for attendance {attendance_id}"})
+        attendance_record = self.get_object(attendance_id)
+        if attendance_record is None:
+            return Response({'error': 'Attendance record not found'}, status=404)
 
+        serializer = AttendanceSerializer(attendance_record, context={'request': request})    
+        return Response(serializer.data)
+    
     def put(self, request, attendance_id):
-        return Response({"message": f"Attendance API PUT request for attendance {attendance_id}"})
-
+        attendance_record = self.get_object(attendance_id)
+        if attendance_record is None:
+            return Response({'error': 'Attendance record not found'}, status=404)
+        
+        serializer = AttendanceSerializer(attendance_record, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+    
     def delete(self, request, attendance_id):
-        return Response({"message": f"Attendance API DELETE request for attendance {attendance_id}"})   
+        attendance_record = self.get_object(attendance_id)
+        if attendance_record is None:
+            return Response({'error': 'Attendance record not found'}, status=404)
+        
+        attendance_record.delete()
+        return Response(status=204)

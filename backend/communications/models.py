@@ -13,10 +13,10 @@ class ParentAlerts(models.Model):
     status = models.CharField(max_length=10, choices=AlertStatus.choices)
 
     # Links to most relevant context
-    fee = models.ForeignKey('records.Fees', on_delete=models.SET_NULL, null=True, related_name='alerts')
-    mark = models.ForeignKey('records.Marks', on_delete=models.SET_NULL, null=True, related_name='alerts')
+    # fee = models.ForeignKey('records.Fees', on_delete=models.SET_NULL, null=True, related_name='alerts')  # Commented - Fees model not active
+    mark = models.ForeignKey('records.Mark', on_delete=models.SET_NULL, null=True, related_name='alerts')  # Updated: Marks → Mark
     attendance = models.ForeignKey('records.Attendance', on_delete=models.SET_NULL, null=True, related_name='alerts')
-    backlog = models.ForeignKey('records.Backlogs', on_delete=models.SET_NULL, null=True, related_name='alerts')
+    # backlog = models.ForeignKey('records.Backlogs', on_delete=models.SET_NULL, null=True, related_name='alerts')  # Commented - Backlogs model not active
     created_at = models.DateTimeField()
     modified_at = models.DateTimeField()
     modified_by = models.TextField()
