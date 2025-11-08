@@ -8,25 +8,13 @@ class ExamType(models.TextChoices):
 class AttendanceStatus(models.TextChoices):
     PRESENT = 'Present', 'Present'
     ABSENT = 'Absent', 'Absent'
-    LEAVE = 'Leave', 'Leave'
-
-# class FeeStatus(models.TextChoices):
-#     PAID = 'Paid', 'Paid'
-#     PENDING = 'Pending', 'Pending'
-#     OVERDUE = 'Overdue', 'Overdue'
-
-# class BacklogStatus(models.TextChoices):
-#     PENDING = 'Pending', 'Pending'
-#     CLEARED = 'Cleared', 'Cleared'
-
-
 
 class Mark(models.Model):
     mark_id = models.AutoField(primary_key=True)
     student = models.ForeignKey('accounts.Student', on_delete=models.CASCADE, related_name='marks')
     subject = models.ForeignKey('academics.Subjects', on_delete=models.CASCADE, related_name='marks')
     exam_type = models.CharField(max_length=20, choices=ExamType.choices)
-    score = models.IntegerField(help_text="Score value (validation in serializer)")
+    score = models.IntegerField()
     grade = models.CharField(max_length=5)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -34,6 +22,7 @@ class Mark(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+        db_table = 'marks'
         verbose_name = "Mark"   
         verbose_name_plural = "Marks"  
         ordering = ['-created_at']
@@ -55,6 +44,7 @@ class Attendance(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+        db_table = 'attendance_records'
         verbose_name = "Attendance Record"   
         verbose_name_plural = "Attendance Records"
         ordering = ['-date']
@@ -65,6 +55,14 @@ class Attendance(models.Model):
     
 
 
+# class FeeStatus(models.TextChoices):
+#     PAID = 'Paid', 'Paid'
+#     PENDING = 'Pending', 'Pending'
+#     OVERDUE = 'Overdue', 'Overdue'
+
+# class BacklogStatus(models.TextChoices):
+#     PENDING = 'Pending', 'Pending'
+#     CLEARED = 'Cleared', 'Cleared'
 
 # class Fees(models.Model):
 #     fee_id = models.AutoField(primary_key=True)

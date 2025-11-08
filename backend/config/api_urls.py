@@ -4,5 +4,5 @@ urlpatterns = [
 #     path("", include("academics.urls")),
     path("", include("accounts.urls")),
 #     path("", include("communications.urls")),
-#     path("", include("records.urls")),
+    path("", include("records.urls")),
 ]
