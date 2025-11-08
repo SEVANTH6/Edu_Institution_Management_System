@@ -8,7 +8,6 @@ class User(AbstractUser):
         ('faculty', 'Faculty'),
         ('admin', 'Admin'),
     ) 
-
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, help_text="Type of user", blank=False, null=False)
     phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
 

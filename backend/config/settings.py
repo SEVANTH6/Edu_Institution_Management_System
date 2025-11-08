@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta  
+from dotenv import load_dotenv 
+import os # To access environment variables
+
+load_dotenv()  # take environment variables from .env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
@@ -24,7 +29,23 @@ SECRET_KEY: str = "django-insecure-9za1j60%%_mm7=26rl$-+k1@(()a1chbo_(o7cg7t(_+)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: bool = True
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list[str] = ['*']
+
+# Rest Framework and JWT Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Token valid for 30 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),     # Refresh token valid for 1 day
+}
+
 
 # Application definition
 INSTALLED_APPS: list[str] = [
@@ -36,25 +57,11 @@ INSTALLED_APPS: list[str] = [
     "django.contrib.staticfiles",
     "accounts",
     "academics",
-    "records",
     "communications",
+    "records",
     "rest_framework",
-    "rest_framework.authtoken",
+    "corsheaders",
 ]
-
-
-# REST Framework Configuration
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
-}
 
 MIDDLEWARE: list[str] = [
     "django.middleware.security.SecurityMiddleware",
@@ -64,6 +71,7 @@ MIDDLEWARE: list[str] = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF: str = "config.urls"
@@ -122,7 +130,6 @@ STATIC_URL: str = "static/"
 DEFAULT_AUTO_FIELD: str = "django.db.models.BigAutoField"
 
 
-
-
-# Custom User Model
-AUTH_USER_MODEL = 'accounts.User'
+CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins for development
+CORS_ALLOW_CREDENTIALS = True  # Allow cookies to be included in cross-site HTTP requests
+AUTH_USER_MODEL = "accounts.User"
