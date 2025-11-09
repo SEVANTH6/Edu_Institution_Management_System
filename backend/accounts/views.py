@@ -53,7 +53,7 @@ class FacultyViewSet(viewsets.ModelViewSet):
             # if user is student/others, return no records
             else:
                 return Faculty.objects.none()
-                
+            
         except Exception as e:
             print(e)  # Log the error for debugging
             return Faculty.objects.none()
