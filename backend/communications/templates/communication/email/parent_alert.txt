@@ -1,0 +1,10 @@
+Dear Parent / Guardian,
+
+This is an automated message regarding your child, {{ student.user.get_full_name }} ({{ student.enrollment_number }}).
+
+{{ message }}
+
+Time: {{ timestamp }}
+
+Regards,
+College Administration
